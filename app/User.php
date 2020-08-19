@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\newUserWelcomeMail;
 
 class User extends Authenticatable
 {
@@ -45,15 +47,23 @@ class User extends Authenticatable
         return $this->hasMany(Post::class)->orderBy('created_at', 'desc');
     }
 
+    public function following(){
+        return $this->belongsToMany(Profile::class);
+    }
+
     //Hook up an event to create a profile
     protected static function boot(){
         parent::boot();
 
-        //Settinf data default to the user
+        //Setting data default to the user
         static::created(function($user){
+            //Creating a user profile
             $user->profile()->create([
                 'title' => $user->username,
             ]);
+            
+            //Sending a welcome email
+            Mail::to($user->email)->send(new newUserWelcomeMail());
         });
     }
 }

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Mail\newUserWelcomeMail;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,14 +20,23 @@ Route::get('/', function () {
 
 Auth::routes();
 
+//Temporary
+Route::get('/email', function(){
+    return new newUserWelcomeMail();
+});
+
 //Profiles routes
 Route::get('/profile/{user}', 'ProfilesController@index')->name('profile.show');
 Route::get('/profile/{id}/edit', 'ProfilesController@edit');
 Route::patch('/profile/{id}', 'ProfilesController@update');
 
 //Posts routes
+Route::get('/', 'PostsController@index');
 Route::get('/p/create', 'PostsController@create');
 Route::post('/p', 'PostsController@store');
 Route::get('/p/{post}', 'PostsController@show');
+
+//API ROUTE
+Route::post('/follow/{user}', 'FollowsController@store');
 
 

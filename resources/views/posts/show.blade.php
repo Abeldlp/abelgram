@@ -10,7 +10,7 @@
         <div class="col-6">
             <div class="d-flex align-items-center">
                 <div>
-                    <a href="/profile/{{$post->user->id}}"><img src="/storage/{{$post->user->profile->image}}" class="rounded-circle w-100" style="max-width: 50px;"></a>
+                    <a href="/profile/{{$post->user->id}}"><img src="{{$post->user->profile->profileImage()}}" class="rounded-circle w-100" style="max-width: 50px;"></a>
                 </div>
                 <div class="pl-3 d-flex align-items-center">
                     <a class="text-dark" href="/profile/{{$post->user->id}}"><strong>{{$post->user->username}}</strong></a>

@@ -10,11 +10,10 @@ use Intervention\Image\Facades\Image;
 class ProfilesController extends Controller
 {
     
-    public function index($user)
+    public function index(User $user)
     {
-        $user = User::findOrFail($user);
-        
-        return view('profiles.index')->with('user', $user);
+        $follows =(Auth::user()) ? Auth::user()->following->contains($user->id) : false;
+        return view('profiles.index', compact('user','follows'));
     }
 
 
@@ -23,6 +22,7 @@ class ProfilesController extends Controller
         $this->authorize('update', $user->profile);
         return view('profiles.edit')->with('user', $user);
     }
+
 
     public function update($id){
         $data = request()->validate([
@@ -37,12 +37,15 @@ class ProfilesController extends Controller
         //Sends to the correspondant uploads file
         $imagepath = request('image')->store('profile', 'public');
         //Resize image automatically Need to import library on the top
-        $image = Image::make(public_path("storage/".$imagepath))->fit(1000, 1000);
+        $image = Image::make(public_path("storage/{$imagepath}"))->fit(1000, 1000);
         $image->save();
-        }
-        
-        //!NOT WORKING PROPERLY
+
         Auth::user()->profile->update(array_merge($data, ['image' => $imagepath]));
+        } else {
+            Auth::user()->profile->update($data);
+        }
+
+        
 
         return redirect('profile/'.Auth::user()->id);
     }

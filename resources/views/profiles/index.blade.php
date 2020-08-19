@@ -4,11 +4,18 @@
 <div class="container">
     <div class="row d-flex align-items-center ">
         <div class="col-3 p-5 d-flex justify-content-center">
-            <img  src="/storage/{{$user->profile->image}}"  class="w-100 rounded-circle" alt="logo">
+            <img  src="{{$user->profile->profileImage()}}"  class="w-100 rounded-circle" alt="logo">
         </div>
         <div class="col-9 p-5">
             <div class="d-flex justify-content-between align-items-center ">
-                <h1>{{$user->username}}</h1>
+                <div class="d-flex">
+                    <h1>{{$user->username}}</h1>
+                    
+                    <div>
+                        <follow-button user_id="{{$user->id}}" follows="{{$follows}}"></follow-button>
+                    </div>
+                
+                </div>
                 @can('update', $user->profile)
                     <a href="/p/create" class="pl-3 ml-4 btn btn-primary">Add Post</a>
                 @endcan
@@ -19,10 +26,10 @@
                 </div>
                 
                 <div class="pr-3">
-                    <strong class="pr-2">26k</strong>Followers
+                    <strong class="pr-2">{{$user->profile->followers->count()}}</strong>Followers
                 </div>
                 <div class="pr-3">  
-                    <strong class="pr-2">26k</strong>Followers
+                <strong class="pr-2">{{$user->following->count()}}</strong>Following
                 </div>
             </div>
             
